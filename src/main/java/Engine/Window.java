@@ -85,7 +85,6 @@ public class Window {
     public void update(){
 
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
         glfwSwapBuffers(window); // swap the color buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
         glViewport(0,0,800,800);
