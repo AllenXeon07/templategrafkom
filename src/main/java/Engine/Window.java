@@ -19,10 +19,30 @@ public class Window {
     private int width, height;
     private String title;
 
+
+
+    private MouseInput mouseInput;
+
     public Window(int width, int height, String title){
         this.width = width;
         this.height = height;
         this.title = title;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public boolean isOpen(){
@@ -44,7 +64,7 @@ public class Window {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
         // Create the window
-        window = glfwCreateWindow(width, height, title, NULL, NULL);
+        window = glfwCreateWindow(width+2, height+2, title, NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
@@ -80,17 +100,24 @@ public class Window {
 
         // Make the window visible
         glfwShowWindow(window);
+
+        mouseInput = new MouseInput(window);
     }
 
     public void update(){
 
         // Set the clear color
+
         glfwSwapBuffers(window); // swap the color buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-        glViewport(0,0,800,800);
+        glViewport(0,0,width,height);
 
         if(glfwWindowShouldClose(window))
-           open = false;
+            open = false;
+
+
+
+        mouseInput.input();
     }
 
     public void cleanup(){
@@ -98,5 +125,14 @@ public class Window {
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
     }
+
+    public MouseInput getMouseInput() {
+        return mouseInput;
+    }
+
+    public boolean isKeyPressed(int keyCode) {
+        return glfwGetKey(window, keyCode) == GLFW_PRESS;
+    }
+
 
 }
