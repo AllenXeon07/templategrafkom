@@ -8,6 +8,7 @@ public class MouseInput {
 
     private Vector2f currentPos;
     private Vector2f displVec;
+    private Vector2f scroll;
     private boolean inWindow;
     private boolean leftButtonPressed;
     private Vector2f previousPos;
@@ -16,6 +17,7 @@ public class MouseInput {
     public MouseInput(long windowHandle) {
         previousPos = new Vector2f(-1, -1);
         currentPos = new Vector2f();
+        scroll = new Vector2f();
         displVec = new Vector2f();
         leftButtonPressed = false;
         rightButtonPressed = false;
@@ -26,6 +28,10 @@ public class MouseInput {
             currentPos.y = (float) ypos;
         });
         glfwSetCursorEnterCallback(windowHandle, (handle, entered) -> inWindow = entered);
+        glfwSetScrollCallback(windowHandle, (handle, xoffset, yoffset)->{
+            scroll.x = (float)xoffset;
+            scroll.y = (float)yoffset;
+        });
         glfwSetMouseButtonCallback(windowHandle, (handle, button, action, mode) -> {
             leftButtonPressed = button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS;
             rightButtonPressed = button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS;
@@ -34,6 +40,10 @@ public class MouseInput {
 
     public Vector2f getCurrentPos() {
         return currentPos;
+    }
+
+    public Vector2f getScroll() {
+        return scroll;
     }
 
     public Vector2f getDisplVec() {
