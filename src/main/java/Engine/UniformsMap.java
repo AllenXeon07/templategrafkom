@@ -1,6 +1,6 @@
 package Engine;
 
-import org.joml.Matrix4f;
+import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
 import java.util.*;
@@ -26,13 +26,25 @@ public class UniformsMap {
         uniforms.put(uniformName, uniformLocation);
     }
 
+    private int getUniformLocation(String uniformName) {
+        Integer location = uniforms.get(uniformName);
+        if (location == null) {
+            throw new RuntimeException("Could not find uniform [" + uniformName + "]");
+        }
+        return location.intValue();
+    }
+
+    public void setUniform(String uniformName, int value) {
+        glUniform1i(getUniformLocation(uniformName), value);
+    }
+
     public void setUniform(String uniformName, Matrix4f value) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            Integer location = uniforms.get(uniformName);
-            if (location == null) {
-                throw new RuntimeException("Could not find uniform [" + uniformName + "]");
-            }
-            glUniformMatrix4fv(location.intValue(), false, value.get(stack.mallocFloat(16)));
+            glUniformMatrix4fv(getUniformLocation(uniformName), false, value.get(stack.mallocFloat(16)));
         }
+    }
+
+    public void setUniform(String uniformName, Vector4f value) {
+        glUniform4f(getUniformLocation(uniformName), value.x, value.y, value.z, value.w);
     }
 }
